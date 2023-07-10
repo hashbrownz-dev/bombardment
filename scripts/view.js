@@ -6,7 +6,7 @@
 
 const viewport = document.querySelector('canvas');
 const ctx = viewport.getContext('2d');
-ctx.imageSmoothingEnabled = false;
+ctx.imageSmoothingEnabled = true;
 ctx.lineWidth = 1.5;
 
 const getScale = () => {
@@ -18,7 +18,7 @@ const resizeCanvas = (size = 640) => {
     viewport.width = size;
     const s = getScale();
     viewport.height = 360 * s;
-    ctx.imageSmoothingEnabled = false;
+    ctx.imageSmoothingEnabled = true;
     ctx.lineWidth = 1.5;
 }
 
