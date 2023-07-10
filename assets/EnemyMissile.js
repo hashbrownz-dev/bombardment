@@ -1,0 +1,1 @@
+const EnemyMissile = {"dimensions":{"drawW":"8","drawH":"8"},"col":[{"type":"circ","x":"4","y":"4","r":"4"}],"palette":["#000000","#FF0000"],"layers":[{"name":"Layer_1","shapes":[{"type":"polygon","points":[{"x":"8","y":"4"},{"x":"3.6","y":"0"},{"x":"0","y":"0"},{"x":"0","y":"8"},{"x":"3.6","y":"8"}],"fill":"#000000","stroke":"#FF0000"}]}]};
