@@ -1,8 +1,6 @@
 // TITLE
 
 const renderTitle = () => {
-    const s = getScale();
-    ctx.scale(s,s);
     // DRAW TITLE
     // SET FONT
     ctx.font = `900 ${72}px Axia, sans-serif`;
@@ -21,16 +19,11 @@ const renderTitle = () => {
     // DRAW TEXT
     ctx.fillText('START',320,180);
     ctx.fillText('OPTIONS',320,205);
-    // RESET TRANSFORMATION
-    ctx.resetTransform();
 }
 
 // HUD
 
-const renderHUD = (score = 0, fuel = 100, missiles = 10) => {
-    const s = getScale();
-    ctx.scale(s,s);
-
+const renderHUD = (score = 0, fuel = 100, missiles = 5) => {
     // Draw Background
 
     ctx.fillStyle = black;
@@ -72,15 +65,15 @@ const renderHUD = (score = 0, fuel = 100, missiles = 10) => {
         ctx.strokeRect(112,8,((fuel*0.01)*240),16);
     }
 
-    // width = (fuel * 0.01) * 240?
-
     // Draw Missiles
 
-    // missiles is an integer between 0 and 10...
-    // there should be 10 missiles rendered at the top of the screen
-
-    
-
-    // RESET TRANSFORMATION
-    ctx.resetTransform();
+    let missileX = 608;
+    for(let i = 1; i <= 10; i++){
+        const mOpt = {
+            dir:270,
+        }
+        if(i>missiles) mOpt.color = [{'#FFFFFF':'#333333'}]
+        renderSprite(PlayerMissile,missileX,8,mOpt);
+        missileX -= 24;
+    } 
 }

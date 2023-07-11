@@ -12,7 +12,8 @@ const black = '#000000',
     lime = '#00FF00',
     blue = "#00CCFF",
     purple = '#6600FF',
-    pink = '#FF33ff';
+    pink = '#FF33ff',
+    gray = '#D3D3D3';
 
 // PALETTES
 

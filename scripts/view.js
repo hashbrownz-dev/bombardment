@@ -218,6 +218,8 @@ const renderSprite = (sprite, x = 0, y = 0, options = {}) => {
         y : y + (h/2)
     }
 
+    ctx.save();
+
     // SCALE
 
     if(scale){
@@ -244,10 +246,6 @@ const renderSprite = (sprite, x = 0, y = 0, options = {}) => {
 
     ctx.translate(x,y);
 
-    // SAVE TRANSFORMATION MATRIX
-
-    ctx.save();
-
     // RENDER
 
     for( const layer of layers){
@@ -256,6 +254,8 @@ const renderSprite = (sprite, x = 0, y = 0, options = {}) => {
 
         let transformLayer = false;
         if(Object.keys(options).includes(layer.name)){
+            // SAVE TRANSFORMATION MATRIX
+            ctx.save();
             transformLayer = true;
             const { xScale, yScale, dir, mirrorX, mirrorY, offset } = options[layer.name];
             const { anchor, origin } = layer;
@@ -316,13 +316,12 @@ const renderSprite = (sprite, x = 0, y = 0, options = {}) => {
 
         if(transformLayer) {
             ctx.restore();
-            ctx.save();
         }
     }
 
     // RESET
 
-    ctx.resetTransform();
+    ctx.restore();
 
     // DRAW HITBOXES
 

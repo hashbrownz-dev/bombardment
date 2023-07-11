@@ -19,14 +19,6 @@ const main = () => {
 
         ctx.clearRect(0,0,viewport.width,viewport.height);
 
-        // Draw BG
-
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0,0,viewport.width,viewport.height);
-
-        renderTitle();
-        renderHUD(score, fuel);
-
         // Update Player
 
         // Update Actors
@@ -37,6 +29,21 @@ const main = () => {
 
         // Draw
 
+        // Draw BG
+
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0,0,viewport.width,viewport.height);
+
+        // Set Global Scale
+        const s = getScale();
+        ctx.scale(s,s);
+
+        renderTitle();
+        renderHUD(score, fuel);
+
+        // Reset Transformations
+        ctx.resetTransform();
+        
         // Loop
         requestAnimationFrame(update);
     }
