@@ -8,61 +8,46 @@ class MenuItem{
         this.text = text;
         this.x = x;
         this.y = y;
+        this.selected = false;
         ctx.font = _MenuItemFont;
+        ctx.textAlign = 'center';
         const { width, actualBoundingBoxAscent:top, actualBoundingBoxDescent:bottom, actualBoundingBoxLeft:left, actualBoundingBoxRight:right } = ctx.measureText(text);
         this.width = width;
         this.top = top;
         this.right = right;
         this.bottom = bottom;
         this.left = left;
-        this.boundingRect = {
-            x : this.x - this.left,
-            y : this.y - this.top,
-            w : this.width,
-            h : this.top + this.bottom,
+    }
+    get boundingRect(){
+        const s = getScale()
+        return {
+            x : s * (this.x - this.left),
+            y : s * (this.y - this.top),
+            w : s * (this.width),
+            h : s * (this.top + this.bottom),
         }
     }
-    update(){
-        // GET MOUSE POS
+    update(mouse){
+        this.selected = false;
         // CHECK FOR COLLISION
-        // IF YES CHANGE COLOR
+        if(colPointRect(mouse, this.boundingRect)) this.selected = true;
         // IF MOUSE IS CLICKED PERFORM ACTION
+        if(this.selected && mouse.down){
+            console.log(this.text);
+            _State = this.text;
+        }
     }
     draw(){
         // SET FONT
         ctx.font = _MenuItemFont;
-        ctx.fillStyle = white;
+        ctx.fillStyle = this.selected ? red : white;
+        ctx.textAlign = 'center';
         // DRAW 
         ctx.fillText(this.text,this.x,this.y);
+        // DBR
+        ctx.strokeStyle = lime;
+        ctx.strokeRect(this.x - this.left, this.y - this.top, this.width, this.top + this.bottom);
     }
-}
-
-// TITLE
-
-const renderTitle = () => {
-    // DRAW TITLE
-    // SET FONT
-    ctx.font = `900 ${72}px Axia, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.fillStyle = black;
-    ctx.strokeStyle = red;
-    // DRAW TEXT
-    ctx.fillText('BOMBARDMENT',320,120);
-    ctx.strokeText('BOMBARDMENT',320,120);
-
-    // DRAW MENU
-    // GET CURRENT SELECTION
-    // SET FONT
-    ctx.font = `400 ${24}px carlmarx, sans-serif`;
-    ctx.fillStyle = white;
-    // DRAW TEXT
-    ctx.fillText('START',320,180);
-    ctx.fillText('OPTIONS',320,205);
-    const { width:startWidth, actualBoundingBoxAscent:startTop, actualBoundingBoxDescent:startBottom, actualBoundingBoxLeft:startLeft } = ctx.measureText('START');
-    const { width:optionsWidth, actualBoundingBoxAscent:optionsTop, actualBoundingBoxDescent:optionsBottom, actualBoundingBoxLeft:optionsLeft } = ctx.measureText('OPTIONS');
-    ctx.strokeStyle = lime;
-    ctx.strokeRect(320 - startLeft, 180 - startTop, startWidth, startTop + startBottom);
-    ctx.strokeRect(320 - optionsLeft, 205 - optionsTop, optionsWidth, optionsTop + optionsBottom);
 }
 
 // HUD
@@ -120,8 +105,4 @@ const renderHUD = (score = 0, fuel = 100, missiles = 5) => {
         renderSprite(PlayerMissile,missileX,8,mOpt);
         missileX -= 24;
     } 
-}
-
-const getBoundingRectText = (textMetric) => {
-
 }

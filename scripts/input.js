@@ -16,14 +16,16 @@ const trackKeys = (keys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' 
 // MOUSE
 
 const trackMouse = () => {
-    const mouse = { x:0, y:0, clicked:false };
+    const mouse = { x:0, y:0 };
     document.querySelector('canvas').addEventListener('mousemove', e => {
         mouse.x = e.offsetX;
         mouse.y = e.offsetY;
     })
-    document.querySelector('canvas').addEventListener('click', e => {
-        mouse.clicked = true;
-        console.log(mouse);
+    window.addEventListener('mousedown', e => {
+        mouse.down = true;
+    })
+    window.addEventListener('mouseup', e => {
+        mouse.down = false;
     })
     return mouse;
 }
