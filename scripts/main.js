@@ -1,4 +1,5 @@
-const _Input = trackKeys();
+const _Keyboard = trackKeys();
+const _Mouse = trackMouse();
 
 let _Actors = [];
 let _Player;

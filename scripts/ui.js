@@ -1,3 +1,42 @@
+// MENU
+// Assume all Menu Item's will be center aligned...
+
+const _MenuItemFont = `400 24px carlmarx, sans-serif`;
+
+class MenuItem{
+    constructor(text,x,y){
+        this.text = text;
+        this.x = x;
+        this.y = y;
+        ctx.font = _MenuItemFont;
+        const { width, actualBoundingBoxAscent:top, actualBoundingBoxDescent:bottom, actualBoundingBoxLeft:left, actualBoundingBoxRight:right } = ctx.measureText(text);
+        this.width = width;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+        this.left = left;
+        this.boundingRect = {
+            x : this.x - this.left,
+            y : this.y - this.top,
+            w : this.width,
+            h : this.top + this.bottom,
+        }
+    }
+    update(){
+        // GET MOUSE POS
+        // CHECK FOR COLLISION
+        // IF YES CHANGE COLOR
+        // IF MOUSE IS CLICKED PERFORM ACTION
+    }
+    draw(){
+        // SET FONT
+        ctx.font = _MenuItemFont;
+        ctx.fillStyle = white;
+        // DRAW 
+        ctx.fillText(this.text,this.x,this.y);
+    }
+}
+
 // TITLE
 
 const renderTitle = () => {
@@ -19,6 +58,11 @@ const renderTitle = () => {
     // DRAW TEXT
     ctx.fillText('START',320,180);
     ctx.fillText('OPTIONS',320,205);
+    const { width:startWidth, actualBoundingBoxAscent:startTop, actualBoundingBoxDescent:startBottom, actualBoundingBoxLeft:startLeft } = ctx.measureText('START');
+    const { width:optionsWidth, actualBoundingBoxAscent:optionsTop, actualBoundingBoxDescent:optionsBottom, actualBoundingBoxLeft:optionsLeft } = ctx.measureText('OPTIONS');
+    ctx.strokeStyle = lime;
+    ctx.strokeRect(320 - startLeft, 180 - startTop, startWidth, startTop + startBottom);
+    ctx.strokeRect(320 - optionsLeft, 205 - optionsTop, optionsWidth, optionsTop + optionsBottom);
 }
 
 // HUD
@@ -76,4 +120,8 @@ const renderHUD = (score = 0, fuel = 100, missiles = 5) => {
         renderSprite(PlayerMissile,missileX,8,mOpt);
         missileX -= 24;
     } 
+}
+
+const getBoundingRectText = (textMetric) => {
+
 }
