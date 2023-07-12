@@ -59,6 +59,7 @@ const main = () => {
         // DRAW HUD
 
         drawHUD(_Game);
+        drawBaseLine();
 
         // Reset Transformations
         ctx.resetTransform();

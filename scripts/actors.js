@@ -69,8 +69,13 @@ class Player extends Actor {
             }
             // MOVE
             moveActor(this);
-            // CHECK FOR COLLISIONS WITH STATIC OBJECTS (game.forts)
+            // CHECK FOR COLLISIONS WITH STATIC OBJECTS (game.forts + baseline)
             const circ = this.colShapes[0];
+            const baseline = { x:0,y:344,w:640,h:16}
+            if(colCircRect(circ,baseline)){
+                this.clear = true;
+                return;
+            }
             game.forts.forEach((fort,index,arr) => {
                 if(colCircRect(circ,fort)){
                     this.clear = true;
