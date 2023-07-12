@@ -75,16 +75,6 @@ const moveActor = (actor) => {
 // COLLISION SHAPES //
 //////////////////////
 
-class Box{
-    constructor(x,y,w,h){
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        this.type = 'box';
-    }
-}
-
 class Rect{
     constructor(x,y,w,h){
         this.x = x;
@@ -230,6 +220,8 @@ const colCircRect = (circ, rect) => {
     else if(circ.y > rect.y + rect.h) testY = rect.y + rect.h;
 
     const dist = getDistance(circ, {x:testX,y:testY});
+
+    return dist <= circ.r;
 }
 
 // LINE X POINT

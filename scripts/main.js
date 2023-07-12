@@ -56,8 +56,6 @@ const main = () => {
 
         // Clean Up
 
-        // _Actors = _Actors.filter((actor) => !actor.clear)
-
         // DRAW HUD
 
         drawHUD(_Game);

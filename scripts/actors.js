@@ -1,3 +1,5 @@
+// ACTORS
+
 class Actor {
     constructor(sprite){
         this.sprite = sprite;
@@ -19,6 +21,18 @@ class Actor {
     get drawH(){
         return Number(this.sprite.dimensions.drawH);
     }
+    get colShapes(){
+        return this.sprite.col.map( (shape) => {
+            switch(shape.type){
+                case 'circ':
+                    return new Circ(this.drawX + Number(shape.x),this.drawY + Number(shape.y),Number(shape.r));
+                case 'rect':
+                    return new Rect(this.drawX + Number(shape.x),this.drawY + Number(shape.y),Number(shape.w),Number(shape.h));
+                case 'line':
+                    return new Line(this.drawX + Number(shape.x1),this.drawY + Number(shape.y1),this.drawX + Number(shape.x2),this.drawY + Number(shape.y2));
+            }
+        })
+    }
     update(game){
 
     }
@@ -39,20 +53,67 @@ class Player extends Actor {
     }
     update(game, keyboard){
         // UPDATE FUEL
-        this.fuel --;
-        
-        // GET INPUT AND UPDATE DIR
-        if(keyboard['ArrowLeft']){
-            this.dir += this.turnSpeed;
+        this.fuel -= 0.1;
+        if(this.fuel <= 0) this.clear = true;
+
+        if(!this.clear){
+            // GET INPUT AND UPDATE DIR
+            if(keyboard['ArrowLeft']){
+                this.dir += this.turnSpeed;
+            }
+            if(keyboard['ArrowRight']){
+                this.dir -= this.turnSpeed;
+            }
+            if(keyboard[' ']){
+                console.log('THRUST!');
+            }
+            // MOVE
+            moveActor(this);
+            // CHECK FOR COLLISIONS WITH STATIC OBJECTS (game.forts)
+            const circ = this.colShapes[0];
+            game.forts.forEach((fort,index,arr) => {
+                if(colCircRect(circ,fort)){
+                    this.clear = true;
+                    fort.clear = true;
+                    let points = fort.points;
+                    if(this.fuel < 60) points = fort.points * 0.75;
+                    if(this.fuel < 30) points = fort.points * 0.5;
+                    if(this.fuel < 10) points = fort.points * 2.5;
+                    game.score += points;
+                }
+            })
         }
-        if(keyboard['ArrowRight']){
-            this.dir -= this.turnSpeed;
-        }
-        if(keyboard[' ']){
-            console.log('THRUST!');
-        }
-        // MOVE
-        const newPos = moveActor(this);
-        // CHECK FOR COLLISIONS WITH STATIC OBJECTS (game.forts)
+    }
+}
+
+// STRUCTURES
+
+class FortS{
+    constructor(x,y){
+        this.sprite = BaseS;
+        this.x = x;
+        this.y = y;
+        this.w = Number(this.sprite.dimensions.drawW);
+        this.h = Number(this.sprite.dimensions.drawH);
+        this.clear = false;
+        this.points = 1000;
+    }
+    draw(){
+        renderSprite(this.sprite,this.x,this.y);
+    }
+}
+
+class FortM{
+    constructor(x,y){
+        this.sprite = BaseM;
+        this.x = x;
+        this.y = y;
+        this.w = Number(this.sprite.dimensions.drawW);
+        this.h = Number(this.sprite.dimensions.drawH);
+        this.clear = false;
+        this.points = 1000;
+    }
+    draw(){
+        renderSprite(this.sprite,this.x,this.y);
     }
 }
