@@ -3,7 +3,8 @@ const _Mouse = trackMouse();
 
 let _Actors = [];
 let _Player;
-let _Menu = [new MenuItem('PLAY',320,180), new MenuItem('OPTIONS',320,205)];
+let _Menu;
+let _Game;
 // States: title, options, play, pause, gameover
 let _State = 'title';
 
@@ -33,11 +34,15 @@ const main = () => {
 
         // GET STATE (TITLE, PLAY, PAUSE, OPTIONS)
 
-        switch(_State){
+        switch(_State.toLowerCase()){
             case 'title':
+                if(!_Menu)_Menu = [new MenuItem('PLAY',320,180), new MenuItem('OPTIONS',320,205)]
                 handleTitle(_Keyboard,_Mouse);
                 break;
             case 'play':
+                if(!_Game)_Game = new Game();
+                _Game.update(_Keyboard);
+                _Game.draw();
                 break;
             case 'pause':
                 break;
@@ -55,7 +60,7 @@ const main = () => {
 
         // DRAW HUD
 
-        renderHUD(0,100,5);
+        drawHUD(_Game);
 
         // Reset Transformations
         ctx.resetTransform();

@@ -45,14 +45,18 @@ class MenuItem{
         // DRAW 
         ctx.fillText(this.text,this.x,this.y);
         // DBR
-        ctx.strokeStyle = lime;
-        ctx.strokeRect(this.x - this.left, this.y - this.top, this.width, this.top + this.bottom);
+        // ctx.strokeStyle = lime;
+        // ctx.strokeRect(this.x - this.left, this.y - this.top, this.width, this.top + this.bottom);
     }
 }
 
 // HUD
 
-const renderHUD = (score = 0, fuel = 100, missiles = 5) => {
+const drawHUD = (game) => {
+    const score = game ? game.score : 0;
+    const missiles = game ? game.missiles : 10;
+    const fuel = game ? game.player ? game.player.fuel : 100 : 100;
+
     // Draw Background
 
     ctx.fillStyle = black;
