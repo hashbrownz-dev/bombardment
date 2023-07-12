@@ -1,6 +1,8 @@
 const _Keyboard = trackKeys();
 const _Mouse = trackMouse();
 
+const _BG = new Background();
+
 let _Actors = [];
 let _Player;
 let _Menu;
@@ -31,6 +33,8 @@ const main = () => {
         ctx.scale(s,s);
 
         // Scrolling BG
+
+        _BG.draw();
 
         // GET STATE (TITLE, PLAY, PAUSE, OPTIONS)
 
