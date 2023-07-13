@@ -33,6 +33,9 @@ class Actor {
             }
         })
     }
+    get isOutOfBounds(){
+        return ( this.x + (this.drawW/2) < 0 || this.x > 640 + (this.drawW/2) || this.y + (this.drawH/2) < 0 || this.y > 360 + (this.drawH/2) )
+    }
     update(game){
 
     }
@@ -101,6 +104,7 @@ class Turret extends Actor{
         this.dir = 0;
         this.i = 1;
         this.points = 1500;
+        this.toShoot = 180;
     }
     update(game){
         if(game.player){
@@ -108,6 +112,16 @@ class Turret extends Actor{
             if(dir < 225) dir = 225;
             if(dir > 315) dir = 315;
             this.dir = dir - 270;
+            this.toShoot--;
+            if(this.toShoot <= 0){
+                // GET TURRET ROOTS ABSOLUTE X AND Y
+                const {anchor} = this.sprite.layers.find( layer => layer.name === 'Cannon');
+                const mx = Number(anchor.x) + this.drawX, my = Number(anchor.y) + this.drawY;
+                const coords = moveActor({x:mx,y:my,speed:42,dir});
+                const missile = new EnemyMissile(coords.x,coords.y,dir);
+                game.actors.push(missile);
+                this.toShoot = 180;
+            }
             // CHECK FOR COLLISIONS
             const player = game.player.colShapes[0];
             for(const shape of this.colShapes){
@@ -133,6 +147,30 @@ class Turret extends Actor{
     }
     draw(){
         renderSprite(this.sprite, this.drawX, this.drawY, { 'Cannon':{dir:this.dir}, 'Energy':{yScale:1} })
+    }
+}
+
+class EnemyMissile extends Actor{
+    constructor(x,y,dir){
+        super(sprEnemyMissile);
+        this.x = x;
+        this.y = y;
+        this.dir = dir;
+        this.speed = 4;
+    }
+    update(game){
+        moveActor(this);
+        // CHECK FOR COLLISIONS
+        if(game.player){
+            if(colCirc(this.colShapes[0],game.player.colShapes[0])){
+                this.clear = true;
+                game.player.clear = true;
+            }
+        }
+        // CHECK IF OUT OF BOUNDS
+        if(this.isOutOfBounds){
+            this.clear = true;
+        }
     }
 }
 

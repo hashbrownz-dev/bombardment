@@ -69,7 +69,7 @@ const moveActor = (actor) => {
     actor.y += newY;
 
     // Return new coordinates (as object)
-    return {x:newX, y:newY}
+    return {x:actor.x, y:actor.y}
 }
 //////////////////////
 // COLLISION SHAPES //
