@@ -91,6 +91,31 @@ class Player extends Actor {
     }
 }
 
+// TURRETS
+
+class Turret extends Actor{
+    constructor(x){
+        super(EnemyTurret);
+        this.x = x;
+        this.y = 330;
+        this.dir = 0;
+        this.i = 1;
+    }
+    update(game){
+        if(game.player){
+            let dir = getDirection(this,game.player);
+            if(dir < 225) dir = 225;
+            if(dir > 315) dir = 315;
+            this.dir = dir - 270;
+            // CHECK FOR COLLISIONS
+            
+        }
+    }
+    draw(){
+        renderSprite(this.sprite, this.drawX, this.drawY, { 'Cannon':{dir:this.dir}, 'Energy':{yScale:1} })
+    }
+}
+
 // STRUCTURES
 
 class FortS{

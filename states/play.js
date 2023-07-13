@@ -3,7 +3,11 @@
 class Game {
     constructor(){
         this.player;    // the current rocket being controlled by the player
-        this.actors = [];   // enemy turrets, enemy bullets
+        this.actors = [
+            new Turret(36),
+            new Turret(320),
+            new Turret(596),
+        ];   // enemy turrets, enemy bullets
         this.forts = [
             new FortS(80,296),
             new FortM(152,280),
@@ -21,6 +25,11 @@ class Game {
     nextLevel(){
         // reset player, forts, and missiles
         this.player = undefined;
+        this.actors = [
+            new Turret(36),
+            new Turret(320),
+            new Turret(596),
+        ]
         this.forts = [
             new FortS(80,296),
             new FortM(152,280),
@@ -60,6 +69,7 @@ class Game {
         // DRAW STRUCTURES
         this.forts.forEach( fort => fort.draw() );
         // DRAW ACTORS
+        this.actors.forEach( turret => turret.draw() );
         // DRAW EFX
         // DRAW PLAYER
         if(this.player)this.player.draw();
