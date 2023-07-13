@@ -100,6 +100,7 @@ class Turret extends Actor{
         this.y = 330;
         this.dir = 0;
         this.i = 1;
+        this.points = 1500;
     }
     update(game){
         if(game.player){
@@ -108,7 +109,26 @@ class Turret extends Actor{
             if(dir > 315) dir = 315;
             this.dir = dir - 270;
             // CHECK FOR COLLISIONS
-            
+            const player = game.player.colShapes[0];
+            for(const shape of this.colShapes){
+                switch(shape.type){
+                    case 'circ':
+                        this.clear = colCirc(player,shape);
+                        break;
+                    case 'rect':
+                        this.clear = colCircRect(player,shape);
+                        break;
+                }
+                if(this.clear){
+                    game.player.clear = true;
+                    let points = this.points;
+                    if(game.player.fuel < 60) points = this.points * 0.75;
+                    if(game.player.fuel < 30) points = this.points * 0.5;
+                    if(game.player.fuel < 10) points = this.points * 2.5;
+                    game.score += points;
+                    return;
+                }
+            }
         }
     }
     draw(){
