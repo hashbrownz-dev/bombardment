@@ -118,7 +118,11 @@ class Turret extends Actor{
                 const {anchor} = this.sprite.layers.find( layer => layer.name === 'Cannon');
                 const mx = Number(anchor.x) + this.drawX, my = Number(anchor.y) + this.drawY;
                 const coords = moveActor({x:mx,y:my,speed:42,dir});
-                const missile = new EnemyMissile(coords.x,coords.y,dir);
+                // GET FUEL AMOUNT
+                const dist = getDistance(coords, game.player);
+                const fuel = (dist) / 4;
+                const dest = moveActor({x:coords.x, y:coords.y,speed:dist,dir});
+                const missile = new EnemyMissile(coords.x,coords.y,dir,fuel,dest);
                 game.actors.push(missile);
                 this.toShoot = 180;
             }
@@ -151,15 +155,26 @@ class Turret extends Actor{
 }
 
 class EnemyMissile extends Actor{
-    constructor(x,y,dir){
+    constructor(x,y,dir,fuel,dest){
         super(sprEnemyMissile);
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.fuel = fuel;
+        this.dest = dest;
+        this.origin = {x,y};
         this.speed = 4;
     }
     update(game){
         moveActor(this);
+        this.fuel--;
+
+        if(this.fuel <= 0){
+            this.clear = true;
+            game.actors.push(new Blast(this.x,this.y));
+            return;
+        }
+
         // CHECK FOR COLLISIONS
         if(game.player){
             if(colCirc(this.colShapes[0],game.player.colShapes[0])){
@@ -171,6 +186,57 @@ class EnemyMissile extends Actor{
         if(this.isOutOfBounds){
             this.clear = true;
         }
+    }
+    draw(){
+        // Draw Target
+        const target = {
+            x : this.dest.x - 6,
+            y : this.dest.y - 6,
+            size : 12
+        }
+        ctx.strokeStyle = white;
+        ctx.beginPath();
+        ctx.moveTo(target.x, target.y);
+        ctx.lineTo(target.x + target.size, target.y + target.size);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(target.x, target.y + target.size);
+        ctx.lineTo(target.x + target.size, target.y);
+        ctx.stroke();
+        // Draw Trail
+        ctx.strokeStyle = red;
+        ctx.beginPath();
+        ctx.moveTo(this.origin.x,this.origin.y);
+        ctx.lineTo(this.x,this.y);
+        ctx.stroke();
+        // Draw Sprite
+        renderSprite(this.sprite, this.drawX, this.drawY, { dir:this.dir });
+    }
+}
+
+class Blast {
+    constructor(x,y){
+        this.x = x;
+        this.y = y;
+        this.r = 16;
+        this.fuel = 120;
+        this.clear = false;
+    }
+    update(game){
+        this.fuel--;
+        this.r += 0.13;
+        if(this.fuel <= 0) this.clear = true;
+        if(!this.clear && game.player){
+            if(colCirc(this,game.player.colShapes[0])){
+                game.player.clear = true;
+            }
+        }
+    }
+    draw(){
+        ctx.fillStyle = red;
+        ctx.beginPath();
+        ctx.arc(this.x,this.y,this.r,0,7);
+        ctx.fill();
     }
 }
 
