@@ -4,9 +4,9 @@
 const _MenuItemFont = `400 24px carlmarx, sans-serif`;
 
 class MenuItem{
-    constructor(text,x,y){
+    constructor(text,y){
         this.text = text;
-        this.x = x;
+        this.x = 320;
         this.y = y;
         this.selected = false;
         ctx.font = _MenuItemFont;
@@ -28,12 +28,10 @@ class MenuItem{
         }
     }
     update(mouse){
-        this.selected = false;
         // CHECK FOR COLLISION
         if(colPointRect(mouse, this.boundingRect)) this.selected = true;
         // IF MOUSE IS CLICKED PERFORM ACTION
         if(this.selected && mouse.down){
-            console.log(this.text);
             _State = this.text;
         }
     }
@@ -43,11 +41,21 @@ class MenuItem{
         ctx.fillStyle = this.selected ? red : white;
         ctx.textAlign = 'center';
         // DRAW 
-        ctx.fillText(this.text,this.x,this.y);
+        ctx.fillText(this.text.toUpperCase(),this.x,this.y);
         // DBR
         // ctx.strokeStyle = lime;
         // ctx.strokeRect(this.x - this.left, this.y - this.top, this.width, this.top + this.bottom);
     }
+}
+
+const _MenuHeadingFont = `900 48px Axia, sans-serif`;
+const drawMenuHeading = (text) => {
+    // SET FONT
+    ctx.font = _MenuHeadingFont;
+    ctx.fillStyle = red;
+    ctx.textAlign = 'center';
+    // DRAW
+    ctx.fillText(text.toUpperCase(),320,110);
 }
 
 // HUD

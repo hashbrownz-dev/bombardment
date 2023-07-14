@@ -1,11 +1,11 @@
 const _Keyboard = trackKeys();
 const _Mouse = trackMouse();
 
-const _BG = new Background();
+let _InputMode = 'mouse';
 
-let _Actors = [];
-let _Player;
-let _Menu;
+const _BG = new Background();
+const _Title = new TitleMenu();
+const _Pause = new PauseMenu();
 let _Game;
 // States: title, options, play, pause, gameover
 let _State = 'title';
@@ -40,8 +40,13 @@ const main = () => {
 
         switch(_State.toLowerCase()){
             case 'title':
-                if(!_Menu)_Menu = [new MenuItem('PLAY',320,180), new MenuItem('OPTIONS',320,205)]
-                handleTitle(_Keyboard,_Mouse);
+                _Title.update(_Mouse,_Keyboard)
+                _Title.draw();
+                break;
+            case 'start':
+                _State = 'play';
+                break;
+            case 'options':
                 break;
             case 'play':
                 if(!_Game)_Game = new Game();
@@ -49,8 +54,20 @@ const main = () => {
                 _Game.draw();
                 break;
             case 'pause':
+                _Pause.update(_Mouse,_Keyboard);
+                _Game.draw();
+                _Pause.draw();
                 break;
-            case 'options':
+            case 'continue':
+                _State = 'play';
+                break;
+            case 'retry':
+                _Game = new Game();
+                _State = 'play';
+                break;
+            case 'quit':
+                _Game = undefined;
+                _State = 'title';
                 break;
         }
 

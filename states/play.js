@@ -43,6 +43,10 @@ class Game {
     }
     update(keyboard){
         // GET INPUT
+        if(keyboard['z']){
+            _State = 'pause';
+            return;
+        }
         // UPDATE PLAYER
         if(this.player) {
             this.player.update(this,keyboard);
