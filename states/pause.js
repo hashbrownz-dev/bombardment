@@ -2,30 +2,13 @@
 // DISPLAY MENU
 // DISPLAY GAME GRAPHICS
 
-const handlePause = (mouse) => {
-
-}
-
-class PauseMenu{
+class PauseMenu extends Menu{
     constructor(){
-        this.selection = 0;
-        this.items = [
+        super([
             new MenuItem('continue',180),
             new MenuItem('retry',205),
             new MenuItem('quit',230)
-        ]
-    }
-    update(mouse,keyboard){
-        // DESELECT ALL
-        this.items.forEach( item => item.selected = false );
-        // IF INPUT MODE IS KEYBOARD, SELECT THE SELECTED
-        if(_InputMode === 'keyboard'){
-            const s = this.items[this.selection];
-            s.selected = true;
-            if(keyboard['z'])_State = s.text;
-        } else {
-            this.items.forEach( item => item.update(mouse) );
-        }
+        ])
     }
     draw(){
         // DRAW BG

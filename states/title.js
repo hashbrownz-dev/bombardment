@@ -3,24 +3,12 @@
 // DISPLAY GAME GRAPHICS
 // MAYBE DISPLAY A DEMO?
 
-class TitleMenu{
+class TitleMenu extends Menu{
     constructor(){
-        this.selection = 0;
-        this.items = [
+        super([
             new MenuItem('start',180),
             new MenuItem('options',205),
-        ]
-    }
-    update(mouse,keyboard){
-        // DESELECT ALL
-        this.items.forEach( item => item.selected = false );
-        if(_InputMode === 'keyboard'){
-            const s = this.items[this.selection];
-            s.selected = true;
-            if(keyboard['z'])_State = s.text;
-        } else {
-            this.items.forEach( item => item.update(mouse) );
-        }
+        ])
     }
     draw(){
         // DRAW TITLE

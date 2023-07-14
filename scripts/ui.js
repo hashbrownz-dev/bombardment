@@ -3,6 +3,25 @@
 
 const _MenuItemFont = `400 24px carlmarx, sans-serif`;
 
+class Menu{
+    constructor(items){
+        this.selection = 0;
+        this.items = items;
+    }
+    update(mouse,keyboard){
+        // DESLECT ALL
+        this.items.forEach( item => item.selected = false );
+        // IF INPUT MODE IS KEYBOARD, SELECT THE SELECTED
+        if(_InputMode === 'keyboard'){
+            const s = this.items[this.selection];
+            s.selected = true;
+            if(keyboard['z'])_State = s.text;
+        } else {
+            this.items.forEach( item => item.update(mouse) );
+        }
+    }
+}
+
 class MenuItem{
     constructor(text,y){
         this.text = text;
