@@ -8,28 +8,20 @@ class Menu{
         this.selection = 0;
         this.items = items;
     }
-    update(mouse,keyboard){
-        // DESLECT ALL
-        this.items.forEach( item => item.selected = false );
-        // IF INPUT MODE IS KEYBOARD, SELECT THE SELECTED
-        if(_InputMode === 'keyboard'){
-            const s = this.items[this.selection];
-            s.selected = true;
-            if(keyboard['z'])_State = s.text;
-        } else {
-            this.items.forEach( item => item.update(mouse) );
-        }
+    update(){
+        this.items.forEach( item => item.update() );
     }
 }
 
-class MenuItem{
-    constructor(text,y){
+class Selection{
+    constructor(text='default',x=0,y=0,align='left'){
         this.text = text;
-        this.x = 320;
+        this.x = x;
         this.y = y;
+        this.align = align;
         this.selected = false;
         ctx.font = _MenuItemFont;
-        ctx.textAlign = 'center';
+        ctx.textAlign = this.align;
         const { width, actualBoundingBoxAscent:top, actualBoundingBoxDescent:bottom, actualBoundingBoxLeft:left, actualBoundingBoxRight:right } = ctx.measureText(text);
         this.width = width;
         this.top = top;
@@ -46,11 +38,18 @@ class MenuItem{
             h : s * (this.top + this.bottom),
         }
     }
-    update(mouse){
+}
+
+class MenuItem extends Selection{
+    constructor(text,y){
+        super(text,320,y,'center');
+    }
+    update(){
+        this.selected = false;
         // CHECK FOR COLLISION
-        if(colPointRect(mouse, this.boundingRect)) this.selected = true;
+        if(colPointRect(_Mouse, this.boundingRect)) this.selected = true;
         // IF MOUSE IS CLICKED PERFORM ACTION
-        if(this.selected && mouse.down){
+        if(this.selected && _Mouse.down){
             _State = this.text;
         }
     }
@@ -75,6 +74,71 @@ const drawMenuHeading = (text) => {
     ctx.textAlign = 'center';
     // DRAW
     ctx.fillText(text.toUpperCase(),320,110);
+}
+
+// CONFIG SELECTION
+
+class ConfigSelect{
+    constructor(y,title,selections){
+        this.y = y;
+        this.title = title;
+        const selX = this.getSelectionX(selections);
+        this.selections = selections.map( ( selection, i ) => {
+            return new ConfigParam(selection,selX[i],this.y+25,false)
+        });
+    }
+    getSelectionX(selections){
+        // return an array (in order) of the x coordinates of each selection
+        // first get the total width...
+        let totalWidth = 0;
+        // Set Font for Text Width
+        ctx.font = _MenuItemFont;
+        // Add Each Selection's Width to totalWidth
+        selections.forEach( selection => {
+            totalWidth += ctx.measureText(selection).width;
+        });
+        // Add margin total to totalWidth
+        totalWidth += (selections.length - 1) * 8;
+        // Subtract totalWidth from Native Screen Width and divide by 2
+        const offset = (640 - totalWidth) / 2;
+
+        const output = [offset];
+
+        for(let i = 1; i < selections.length; i++){
+            output.push( output[i-1] + ctx.measureText(selections[i-1]).width + 8 );
+        }
+
+        return output;
+    }
+    draw(){
+        // DRAW TITLE
+        ctx.font = _MenuItemFont;
+        ctx.fillStyle = red;
+        ctx.textAlign = 'center';
+        ctx.fillText(this.title,320,this.y);
+        // DRAW SELECTIONS
+        this.selections.forEach(selection => selection.draw());
+    }
+}
+
+// CONFIG PARAMETER
+
+class ConfigParam extends Selection{
+    constructor(text,x,y, selected = false){
+        super(text,x,y,'left');
+        this.selected = selected;
+    }
+    draw(){
+        // SET FONT
+        ctx.font = _MenuItemFont;
+        ctx.fillStyle = this.selected ? red : white;
+        ctx.textAlign = 'left';
+        // DRAW
+        ctx.fillText(this.text.toUpperCase(),this.x,this.y);
+        // DBR
+        // ctx.strokeStyle = lime;
+        // ctx.strokeRect(this.x - this.left, this.y - this.top, this.width, this.top + this.bottom);
+    }
 }
 
 // HUD

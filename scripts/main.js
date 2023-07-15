@@ -1,11 +1,16 @@
 const _Keyboard = trackKeys();
 const _Mouse = trackMouse();
 
-let _InputMode = 'mouse';
-
 const _BG = new Background();
 const _Title = new TitleMenu();
 const _Pause = new PauseMenu();
+const _Option = new OptionMenu();
+const _Config = {
+    screenSize : '1x',
+    sound : true,
+    music : true,
+};
+
 let _Game;
 // States: title, options, play, pause, gameover
 let _State = 'title';
@@ -40,13 +45,14 @@ const main = () => {
 
         switch(_State.toLowerCase()){
             case 'title':
-                _Title.update(_Mouse,_Keyboard)
+                _Title.update(_Keyboard)
                 _Title.draw();
                 break;
             case 'start':
                 _State = 'play';
                 break;
             case 'options':
+                _Option.draw();
                 break;
             case 'play':
                 if(!_Game)_Game = new Game();
@@ -54,7 +60,7 @@ const main = () => {
                 _Game.draw();
                 break;
             case 'pause':
-                _Pause.update(_Mouse,_Keyboard);
+                _Pause.update(_Keyboard);
                 _Game.draw();
                 _Pause.draw();
                 break;
