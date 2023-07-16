@@ -57,7 +57,7 @@ class MenuItem extends Selection{
         // SET FONT
         ctx.font = _MenuItemFont;
         ctx.fillStyle = this.selected ? red : white;
-        ctx.textAlign = 'center';
+        ctx.textAlign = this.align;
         // DRAW 
         ctx.fillText(this.text.toUpperCase(),this.x,this.y);
         // DBR
@@ -84,7 +84,8 @@ class ConfigSelect{
         this.title = title;
         const selX = this.getSelectionX(selections);
         this.selections = selections.map( ( selection, i ) => {
-            return new ConfigParam(selection,selX[i],this.y+25,false)
+            let s = i == 0 ? true : false;
+            return new ConfigParam(selection,selX[i],this.y+25,s)
         });
     }
     getSelectionX(selections){
@@ -110,12 +111,22 @@ class ConfigSelect{
 
         return output;
     }
+    update(){
+        this.selections.forEach( (selection) => {
+            if(colPointRect(_Mouse, selection.boundingRect) && _Mouse.down && !selection.selected ){
+                this.selections.forEach( (selection) => selection.selected = false );
+                selection.selected = true;
+                _Config[this.title] = this.selections.find( selection => selection.selected === true ).text;
+                handleConfig(this.title);
+            }
+        })
+    }
     draw(){
         // DRAW TITLE
         ctx.font = _MenuItemFont;
         ctx.fillStyle = red;
         ctx.textAlign = 'center';
-        ctx.fillText(this.title,320,this.y);
+        ctx.fillText(this.title.toUpperCase(),320,this.y);
         // DRAW SELECTIONS
         this.selections.forEach(selection => selection.draw());
     }
@@ -132,9 +143,9 @@ class ConfigParam extends Selection{
         // SET FONT
         ctx.font = _MenuItemFont;
         ctx.fillStyle = this.selected ? red : white;
-        ctx.textAlign = 'left';
+        ctx.textAlign = this.align;
         // DRAW
-        ctx.fillText(this.text.toUpperCase(),this.x,this.y);
+        ctx.fillText(this.text,this.x,this.y);
         // DBR
         // ctx.strokeStyle = lime;
         // ctx.strokeRect(this.x - this.left, this.y - this.top, this.width, this.top + this.bottom);

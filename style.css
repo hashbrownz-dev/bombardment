@@ -12,3 +12,12 @@
     font-weight: 900;
 
 */
+
+html, body{
+    margin:0;
+}
+
+#viewport{
+    display:block;
+    margin: 0 auto;
+}

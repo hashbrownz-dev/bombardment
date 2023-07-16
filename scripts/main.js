@@ -6,10 +6,30 @@ const _Title = new TitleMenu();
 const _Pause = new PauseMenu();
 const _Option = new OptionMenu();
 const _Config = {
-    screenSize : '1x',
-    sound : true,
-    music : true,
+    'screen size' : '1x',
+    'sound' : 'on',
+    'music' : 'on',
 };
+const handleConfig = (prop) => {
+    if(prop === 'screen size'){
+        switch(_Config[prop]){
+            case '1x':
+                if(document.fullscreenElement)document.exitFullscreen();
+                resizeCanvas(640);
+                break;
+            case '1.5x':
+                if(document.fullscreenElement)document.exitFullscreen();
+                resizeCanvas(960);
+                break;
+            case 'fit to window':
+                fitToWindow();
+                break;
+            case 'fullscreen':
+                setFullscreen();
+                break;
+        }
+    }
+}
 
 let _Game;
 // States: title, options, play, pause, gameover
@@ -52,6 +72,7 @@ const main = () => {
                 _State = 'play';
                 break;
             case 'options':
+                _Option.update();
                 _Option.draw();
                 break;
             case 'play':
@@ -75,13 +96,10 @@ const main = () => {
                 _Game = undefined;
                 _State = 'title';
                 break;
+            default:
+                _State = 'title';
+                break;
         }
-
-        // Update Player
-
-        // Update Actors
-
-        // Clean Up
 
         // DRAW HUD
 

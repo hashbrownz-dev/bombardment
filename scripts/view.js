@@ -22,6 +22,28 @@ const resizeCanvas = (size = 640) => {
     ctx.lineWidth = 1.5;
 }
 
+const fitToWindow = () => {
+    // exit fullscreen
+    if(document.fullscreenElement){
+        document.exitFullscreen();
+    }
+    // get the width of the window...
+    let width = window.innerWidth;
+    let height = 360 * (width / 640);
+    if(height > window.innerHeight){
+        // resize the canvas based on the height
+        width = 640 * (window.innerHeight / 360);
+    }
+    resizeCanvas(width);
+}
+
+const setFullscreen = () => {
+    // console.log('go fullscreen');
+    resizeCanvas(window.outerWidth);
+    document.getElementById('game').requestFullscreen();
+    
+}
+
 // TRANSFORMATION FUNCTIONS
 
 /**
